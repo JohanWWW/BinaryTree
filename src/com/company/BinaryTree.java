@@ -1,144 +1,89 @@
 package com.company;
 
+import javax.management.openmbean.KeyAlreadyExistsException;
+
 public class BinaryTree {
+
+    private static class Node {
+        Node left;
+        Node right;
+        int value;
+
+        Node(int value) {
+            this.value = value;
+        }
+    }
 
     private Node root;
 
-    public BinaryTree() {
-
+    public void insert(int value) {
+        root = insertRecursive(root, value);
     }
 
-    public static void main(String[] args) {
-        BinaryTree tree = new BinaryTree();
-
-        /*
-                    8
-                   / \
-                  3   10
-                 / \   \
-                1   6   13
-         */
-
-
-        /*
-                        2
-                       /|\
-                      1 2 6
-                         / \
-                        3   500
-                           /   \
-                         439   1700
-                         /     /  \
-                        32   550  1701
-                        |
-                        32
-                        |
-                        32
-         */
-
-        /*tree.insert(2);
-        tree.insert(1);
-        tree.insert(6);
-        tree.insert(2);
-        tree.insert(500);
-        tree.insert(439);
-        tree.insert(32);
-        tree.insert(500);
-        tree.insert(32);
-        tree.insert(500);
-        tree.insert(32);*/
-
-        /*tree.insert(5);
-        tree.insert(2);
-        tree.insert(5);
-        tree.insert(6);
-        tree.insert(1);
-        tree.insert(2);
-        tree.insert(4);*/
-
-        tree.insert(10);
-        tree.insert(2);
-        tree.insert(10);
-        tree.insert(16);
-        tree.insert(1);
-        tree.insert(2);
-        tree.insert(4);
-        tree.insert(3);
-        tree.insert(7);
-        tree.insert(5);
-        tree.insert(8);
-        tree.insert(9);
-
-        tree.printTreeInOrder();
-
-        tree.remove(2);
-        tree.remove(2);
-
-
-        tree.printTreeInOrder();
-    }
-
-    public void insert(int key) {
-        root = insertRecursive(root, key);
-    }
-
-    public void remove(int key) {
+    public void remove(int value) {
         /*
                 10
-              / | \
-             2  10  16
-           / | \
-          1  2  4
+              /   \
+             2      16
+           /   \
+          1     4
                / \
               3   7
                  / \
                 5   8
                      \
                       9
+                     / \
+                    null null
          */
 
-        removeRecursive(root, null, key);
+        removeRecursive(root, value);
     }
 
-    private void removeRecursive(Node tree, Node parentTree, int keyToRemove) {
+    private void removeRecursive(Node currentTree, int valueToRemove) {
 
-        if (keyToRemove < tree.key) {
+        if (valueToRemove < currentTree.value) {
 
-            if (tree.left != null)
-                removeRecursive(tree.left, tree, keyToRemove);
-            else
-                parentTree.left = tree;
+            if (currentTree.left != null) {
+                removeRecursive(currentTree.left, valueToRemove);
+            }
 
-        } else if (keyToRemove > tree.key) {
+        } else if (valueToRemove > currentTree.value) {
 
-            if (tree.right != null)
-                removeRecursive(tree.right, tree, keyToRemove);
+            if (currentTree.right != null) {
+                removeRecursive(currentTree.right, valueToRemove);
+            }
 
         } else {
+            Node previous = null;
+            Node temp = currentTree;
+            while (temp.right != null) {
+                previous = temp;
+                temp = temp.right;
+            }
 
-            if (tree.middle != null)
-                removeRecursive(tree.middle, tree, keyToRemove);
-            else
-                parentTree.middle = null;
+            if (temp.left == null) {
+                temp.value = currentTree.value;
+                previous.right = null;
+            } else {
+                temp.left.value = currentTree.value;
+                previous.left = null;
+            }
         }
-
-        /*while (current.right != nodeToRemove) {
-            current = current.right;
-        }*/
     }
 
-    private Node insertRecursive(Node tree, int key) {
+    private Node insertRecursive(Node tree, int value) {
         if (tree == null) {
-            tree = new Node(key);
+            tree = new Node(value);
             return tree;
         }
 
-        if (key < tree.key) {
-            tree.left = insertRecursive(tree.left, key);
-        } else if (key > tree.key) {
-            tree.right = insertRecursive(tree.right, key);
+        if (value < tree.value) {
+            tree.left = insertRecursive(tree.left, value);
+        } else if (value > tree.value) {
+            tree.right = insertRecursive(tree.right, value);
         } else {
-            tree.middle = insertRecursive(tree.middle, key);
+            throw new KeyAlreadyExistsException(String.format("The value '%s' already exists", value));
         }
 
         return tree;
@@ -157,8 +102,7 @@ public class BinaryTree {
             return;
         }
         printTreeInOrder(tree.left);
-        System.out.println(tree.key);
-        printMiddleBranch(tree.middle);
+        System.out.println(tree.value);
         printTreeInOrder(tree.right);
     }
 
@@ -167,27 +111,7 @@ public class BinaryTree {
             return;
         }
         printTreeInReverseOrder(tree.right);
-        System.out.println(tree.key);
-        printMiddleBranch(tree.middle);
+        System.out.println(tree.value);
         printTreeInReverseOrder(tree.left);
-    }
-
-    private void printMiddleBranch(Node tree) {
-        Node current = tree;
-        while (current != null) {
-            System.out.println(current.key);
-            current = current.middle;
-        }
-    }
-
-    private static class Node {
-        Node left;
-        Node middle;
-        Node right;
-        int key;
-
-        Node(int key) {
-            this.key = key;
-        }
     }
 }
