@@ -105,8 +105,18 @@ public class BinaryTree {
              */
             else if (parentTree.hasRightChild() && parentTree.right.hasLeftChild()) {
                 Node currentLeft = parentTree.right.left;
+            }
 
+            else if (parentTree.hasLeftChild() && parentTree.left.hasTwoChildren()) {
+                Node currentLeft = parentTree.left.left;
+                Node currentRight = parentTree.left.right;
 
+                parentTree.left = currentLeft;
+                insertRecursive(currentLeft, currentRight);
+            }
+
+            else {
+                parentTree.left = null;
             }
         }
     }
