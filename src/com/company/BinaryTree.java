@@ -41,8 +41,10 @@ public class BinaryTree {
         } else {
 
             /*
-                When a node is removed, it is replaced by it's right child.
-                If the node of removal lacks a right child, it is instead replaced by it's left child.
+                When a node is removed, it is replaced by its right node.
+                If the node of removal lacks a right node, it is instead replaced by its left node.
+                If the node of removal has two branches, it will be replaced by the node on its right
+                and the node on its left will be inserted into the new branch
              */
 
             if (currentNode.hasTwoChildren()) {
