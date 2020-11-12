@@ -10,8 +10,8 @@ import java.io.PrintStream;
 
 public class BinaryTreeTests {
     @Test
-    @DisplayName("Validate that printTreeInOrder prints elements in order")
-    public void printTreeInOrderPrintsInOrder() {
+    @DisplayName("Validate that printInOrder prints elements in order")
+    public void printInOrder() {
         // Arrange
         OutputStream outputStream = createOutputListener();
 
@@ -28,8 +28,8 @@ public class BinaryTreeTests {
     }
 
     @Test
-    @DisplayName("Validate that printTreeInReverseOrder prints elements in reverse order")
-    public void printTreeInReverseOrderPrintsInReverseOrder() {
+    @DisplayName("Validate that printInReverseOrder prints elements in reverse order")
+    public void printInReverseOrder() {
         // Arrange
         OutputStream outputStream = createOutputListener();
 
@@ -41,6 +41,42 @@ public class BinaryTreeTests {
         // Assert
         String capturedOutput = outputStream.toString().replaceAll("\\r\\n|\\r", "\n");
         String expectedOutput = "1701\n1700\n550\n500\n439\n35\n34\n32\n30\n25\n24\n13\n12\n5\n0\n-30\n-32\n";
+
+        Assertions.assertEquals(expectedOutput, capturedOutput);
+    }
+
+    @Test
+    @DisplayName("Validate that printPreOrder prints elements pre ordered")
+    public void printPreOrder() {
+        // Arrange
+        OutputStream outputStream = createOutputListener();
+
+        BinaryTree testTree = getTestTree();
+
+        // Act
+        testTree.printPreOrder();
+
+        // Assert
+        String capturedOutput = outputStream.toString().replaceAll("\\r\\n|\\r", "\n");
+        String expectedOutput = "32\n24\n0\n-30\n-32\n5\n13\n12\n25\n30\n500\n35\n34\n439\n550\n1701\n1700\n";
+
+        Assertions.assertEquals(expectedOutput, capturedOutput);
+    }
+
+    @Test
+    @DisplayName("Validate that printPostOrder prints elements post ordered")
+    public void printPostOrder() {
+        // Arrange
+        OutputStream outputStream = createOutputListener();
+
+        BinaryTree testTree = getTestTree();
+
+        // Act
+        testTree.printPostOrder();
+
+        // Assert
+        String capturedOutput = outputStream.toString().replaceAll("\\r\\n|\\r", "\n");
+        String expectedOutput = "-32\n-30\n12\n13\n5\n0\n30\n25\n24\n34\n439\n35\n1700\n1701\n550\n500\n32\n";
 
         Assertions.assertEquals(expectedOutput, capturedOutput);
     }
