@@ -14,13 +14,13 @@ public class BinaryTree {
         /*
                 10
               /   \
-             1      16
-              \
-               2
-                \
-                 4 <--
+             1     16
+            / \      \
+          -64  2      32
+          /  \  \
+       -128 -42  4
                 / \
-               3   7 <--
+               3   7
                   / \
                  5   8
                       \
@@ -30,93 +30,73 @@ public class BinaryTree {
         removeRecursive(root, null, value);
     }
 
-    private void removeRecursive(Node currentTree, Node parentTree, int valueToRemove) {
+    private void removeRecursive(Node currentNode, Node parentNode, int valueToRemove) {
 
-        if (valueToRemove < currentTree.value && currentTree.hasLeftChild()) {
-            removeRecursive(currentTree.left, currentTree, valueToRemove);
+        if (valueToRemove < currentNode.value && currentNode.hasLeftChild()) {
+            removeRecursive(currentNode.left, currentNode, valueToRemove);
 
-        } else if (valueToRemove > currentTree.value && currentTree.hasRightChild()) {
-            removeRecursive(currentTree.right, currentTree, valueToRemove);
+        } else if (valueToRemove > currentNode.value && currentNode.hasRightChild()) {
+            removeRecursive(currentNode.right, currentNode, valueToRemove);
 
         } else {
-            // If current is root
-            if (parentTree == null) {
-                Node left = currentTree.left;
-                root = currentTree.right;
-                insertRecursive(root, left);
-                return;
-            }
 
             /*
-                IF (parent has a right child that has two children):
-
-                    ...
-                      \
-                     Node           <- "parentTree"
-                    /    \
-                  ...   Node        <- "currentTree"
-                       /    \
-                     Node   Node
-                    /    \ /    \
-                  ...   .....   ...
-
+                When a node is removed, it is replaced by it's right child.
+                If the node of removal lacks a right child, it is instead replaced by it's left child.
              */
-            if (parentTree.hasRightChild() && parentTree.right.hasTwoChildren()) {
-                Node currentLeft = parentTree.right.left;
-                Node currentRight = parentTree.right.right;
 
-                parentTree.right = currentRight;
-                insertRecursive(currentRight, currentLeft);
-            }
+            if (currentNode.hasTwoChildren()) {
+                Node branchLeft = currentNode.left;
+                Node branchRight = currentNode.right;
 
-            /*
-                IF (parent has a right child which also has a right child):
+                if (currentNode == root) {
+                    root = insertRecursive(null, branchRight);
+                    insertRecursive(root, branchLeft);
+                    return;
+                }
 
-                    ...
-                      \
-                     Node           <- "parentTree"
-                    /    \
-                  ...   Node        <- "currentTree"
-                       /    \
-                      x    Node
-                          /    \
-                         ...   ...
+                // Is current node its parent's right child?
+                if (currentNode == parentNode.right) {
+                    parentNode.right = insertRecursive(null, branchRight); // Cut off right branch, trim, and reattach
+                    insertRecursive(parentNode.right, branchLeft); // Attach left branch to the right branch
+                } else {
+                    parentNode.left = insertRecursive(null, branchLeft); // Cut off left branch, trim, and reattach
+                    insertRecursive(parentNode.left, branchRight); // Attach right branch to the left branch
+                }
 
-             */
-            else if (parentTree.hasRightChild() && parentTree.right.hasRightChild()) {
-                Node currentRight = parentTree.right.right;
+            } else if (currentNode.hasLeftChild()) {
+                Node branchLeft = currentNode.left;
 
-                parentTree.right = currentRight;
-            }
+                if (currentNode == root) {
+                    root = insertRecursive(null, branchLeft);
+                    return;
+                }
 
-            /*
-                IF (parent has a right child that have a left child):
+                if (currentNode == parentNode.right)
+                    parentNode.right = insertRecursive(null, branchLeft);
+                else
+                    parentNode.left = insertRecursive(null, branchLeft);
 
-                    ...
-                      \
-                     Node       <- "parentTree"
-                    /    \
-                  ...   Node    <- "currentTree"
-                       /    \
-                     Node    x
-                    /    \
-                   ...   ...
+            } else if (currentNode.hasRightChild()) {
+                Node branchRight = currentNode.right;
 
-             */
-            else if (parentTree.hasRightChild() && parentTree.right.hasLeftChild()) {
-                Node currentLeft = parentTree.right.left;
-            }
+                if (currentNode == root) {
+                    root = insertRecursive(null, branchRight);
+                    return;
+                }
 
-            else if (parentTree.hasLeftChild() && parentTree.left.hasTwoChildren()) {
-                Node currentLeft = parentTree.left.left;
-                Node currentRight = parentTree.left.right;
+                if (currentNode == parentNode.right)
+                    parentNode.right = insertRecursive(null, branchRight);
+                else
+                    parentNode.left = insertRecursive(null, branchRight);
 
-                parentTree.left = currentLeft;
-                insertRecursive(currentLeft, currentRight);
-            }
+            } else {
 
-            else {
-                parentTree.left = null;
+                if (currentNode == parentNode.right)
+                    parentNode.right = null;
+                else
+                    parentNode.left = null;
+
             }
         }
     }
@@ -148,7 +128,8 @@ public class BinaryTree {
         } else if (nodeToInsert.value > parentNode.value) {
             parentNode.right = insertRecursive(parentNode.right, nodeToInsert);
         } else {
-            throw new KeyAlreadyExistsException(String.format("The value '%s' already exists", parentNode.value));
+            // This exception should never be thrown
+            throw new KeyAlreadyExistsException();
         }
 
         return parentNode;
