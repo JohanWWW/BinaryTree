@@ -6,25 +6,21 @@ public class BinaryTree {
 
     private Node root;
 
-    public void insert(int value) {
-        root = insertRecursive(root, value);
-    }
-
     public void remove(int value) {
         /*
-                10
-              /   \
-             1     16
-            / \      \
-          -64  2      32
-          /  \  \
-       -128 -42  4
-                / \
-               3   7
-                  / \
-                 5   8
-                      \
-                       9
+                    10
+                  /   \
+                 1     16
+                / \      \
+              -64  2      32
+              /  \  \
+           -128 -42  4
+                    / \
+                   3   7
+                      / \
+                     5   8
+                          \
+                           9
          */
 
         removeRecursive(root, null, value);
@@ -103,12 +99,15 @@ public class BinaryTree {
         }
     }
 
+    public void insert(int value) {
+        root = insertRecursive(root, value);
+    }
+
     private Node insertRecursive(Node tree, int value) {
         if (tree == null) {
             tree = new Node(value);
             return tree;
         }
-
         if (value < tree.value) {
             tree.left = insertRecursive(tree.left, value);
         } else if (value > tree.value) {
@@ -116,7 +115,6 @@ public class BinaryTree {
         } else {
             throw new KeyAlreadyExistsException(String.format("The value '%s' already exists", value));
         }
-
         return tree;
     }
 
@@ -124,7 +122,6 @@ public class BinaryTree {
         if (parentNode == null) {
             return nodeToInsert;
         }
-
         if (nodeToInsert.value < parentNode.value) {
             parentNode.left = insertRecursive(parentNode.left, nodeToInsert);
         } else if (nodeToInsert.value > parentNode.value) {
@@ -133,34 +130,60 @@ public class BinaryTree {
             // This exception should never be thrown
             throw new KeyAlreadyExistsException();
         }
-
         return parentNode;
     }
 
-    public void printTreeInOrder() {
-        printTreeInOrder(root);
+    public void printPreOrder() {
+        printPreOrder(root);
     }
 
-    public void printTreeInReverseOrder() {
-        printTreeInReverseOrder(root);
-    }
-
-    private void printTreeInOrder(Node tree) {
+    private void printPreOrder(Node tree) {
         if (tree == null) {
             return;
         }
-        printTreeInOrder(tree.left);
         System.out.println(tree.value);
-        printTreeInOrder(tree.right);
+        printPreOrder(tree.left);
+        printPreOrder(tree.right);
     }
 
-    private void printTreeInReverseOrder(Node tree) {
+    public void printInOrder() {
+        printInOrder(root);
+    }
+
+    private void printInOrder(Node tree) {
         if (tree == null) {
             return;
         }
-        printTreeInReverseOrder(tree.right);
+        printInOrder(tree.left);
         System.out.println(tree.value);
-        printTreeInReverseOrder(tree.left);
+        printInOrder(tree.right);
+    }
+
+    public void printInReverseOrder() {
+        printInReverseOrder(root);
+    }
+
+    private void printInReverseOrder(Node tree) {
+        if (tree == null) {
+            return;
+        }
+        printInReverseOrder(tree.right);
+        System.out.println(tree.value);
+        printInReverseOrder(tree.left);
+    }
+
+    public void printPostOrder() {
+        printPostOrder(root);
+    }
+
+    private void printPostOrder(Node tree) {
+        if (tree == null) {
+            return;
+        }
+        printPostOrder(tree.left);
+        printPostOrder(tree.right);
+        System.out.println(tree.value);
+
     }
 
     private static class Node {
@@ -182,10 +205,6 @@ public class BinaryTree {
 
         boolean hasTwoChildren() {
             return hasLeftChild() && hasRightChild();
-        }
-
-        boolean hasOneChild() {
-            return hasLeftChild() ^ hasRightChild();
         }
 
         @Override

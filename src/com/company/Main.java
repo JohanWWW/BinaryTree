@@ -3,6 +3,12 @@ package com.company;
 public class Main {
 
     public static void main(String[] args) {
+        int[] test = {5, 3, 79, 15, 2, 1, 3, 4, 23, 43};
+        BubbleSort sortAndPrint = new BubbleSort();
+        System.out.println("====== Print Bubble Sorted List ======\n");
+        sortAndPrint.bubbleSort(test);
+        // ==================== \\
+
         BinaryTree tree = new BinaryTree();
 
         tree.insert(10);
@@ -20,15 +26,13 @@ public class Main {
         tree.insert(-42);
         tree.insert(-128);
 
-        tree.printTreeInOrder();
-
-        tree.remove(10);
-        tree.remove(16);
-        tree.remove(32);
-        tree.remove(1);
-
-        System.out.println();
-
-        tree.printTreeInOrder();
+        System.out.println("\n ====== Print Pre Order ====== \n");
+        tree.printPreOrder();
+        System.out.println("\n ====== Print In Order ====== \n");
+        tree.printInOrder();
+        System.out.println("\n ====== Print In Reverse Order ====== \n");
+        tree.printInReverseOrder();
+        System.out.println("\n ====== Print Post Order ====== \n");
+        tree.printPostOrder();
     }
 }

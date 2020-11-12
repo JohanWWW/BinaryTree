@@ -18,7 +18,7 @@ public class BinaryTreeTests {
         BinaryTree testTree = getTestTree();
 
         // Act
-        testTree.printTreeInOrder();
+        testTree.printInOrder();
 
         // Assert
         String capturedOutput = outputStream.toString().replaceAll("\\r\\n|\\r", "\n");
@@ -36,7 +36,7 @@ public class BinaryTreeTests {
         BinaryTree testTree = getTestTree();
 
         // Act
-        testTree.printTreeInReverseOrder();
+        testTree.printInReverseOrder();
 
         // Assert
         String capturedOutput = outputStream.toString().replaceAll("\\r\\n|\\r", "\n");
@@ -60,7 +60,7 @@ public class BinaryTreeTests {
         testTree.remove(24);
         testTree.remove(35);
 
-        testTree.printTreeInOrder();
+        testTree.printInOrder();
 
         // Assert
         String capturedOutput = outputStream.toString().replaceAll("\\r\\n|\\r", "\n");
